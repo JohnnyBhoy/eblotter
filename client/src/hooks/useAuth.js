@@ -1,0 +1,2 @@
+import { useAuth as useAuthFromContext } from '../context/AuthContext.jsx';
+export default useAuthFromContext;

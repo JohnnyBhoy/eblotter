@@ -1,0 +1,32 @@
+{
+  "regions": [
+    { "code": "060000000", "name": "Region VI (Western Visayas)" }
+  ],
+  "provinces": [
+    { "code": "064500000", "name": "Antique", "regionCode": "060000000" }
+  ],
+  "municipalities": [
+    { "code": "064501000", "name": "Bugasong", "provinceCode": "064500000" },
+    { "code": "064504000", "name": "Culasi", "provinceCode": "064500000" },
+    { "code": "064510000", "name": "Tibiao", "provinceCode": "064500000" },
+    { "code": "064509000", "name": "Sebaste", "provinceCode": "064500000" },
+    { "code": "064511000", "name": "Valderrama", "provinceCode": "064500000" }
+  ],
+  "barangays": [
+    { "code": "064501001", "name": "Brgy. Ilaya", "municipalityCode": "064501000" },
+    { "code": "064501002", "name": "Brgy. Magsaysay", "municipalityCode": "064501000" },
+    { "code": "064501003", "name": "Brgy. Poblacion", "municipalityCode": "064501000" },
+    { "code": "064504001", "name": "Brgy. Ilas Norte", "municipalityCode": "064504000" },
+    { "code": "064504002", "name": "Brgy. Ilas Sur", "municipalityCode": "064504000" },
+    { "code": "064504003", "name": "Brgy. Poblacion", "municipalityCode": "064504000" },
+    { "code": "064510001", "name": "Brgy. Alegre", "municipalityCode": "064510000" },
+    { "code": "064510002", "name": "Brgy. Bulanao", "municipalityCode": "064510000" },
+    { "code": "064510003", "name": "Brgy. Poblacion", "municipalityCode": "064510000" },
+    { "code": "064509001", "name": "Brgy. Abiera", "municipalityCode": "064509000" },
+    { "code": "064509002", "name": "Brgy. Maniguin", "municipalityCode": "064509000" },
+    { "code": "064509003", "name": "Brgy. Poblacion", "municipalityCode": "064509000" },
+    { "code": "064511001", "name": "Brgy. Cananghan", "municipalityCode": "064511000" },
+    { "code": "064511002", "name": "Brgy. Barcelona", "municipalityCode": "064511000" },
+    { "code": "064511003", "name": "Brgy. Poblacion", "municipalityCode": "064511000" }
+  ]
+}
