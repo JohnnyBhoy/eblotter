@@ -3,6 +3,9 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.js';
 import ProtectedRoute from './components/common/ProtectedRoute.js';
 
+// Landing
+import Landing from './pages/Landing.js';
+
 // Auth
 import Login from './pages/auth/Login.js';
 import ForgotPassword from './pages/auth/ForgotPassword.js';
@@ -10,6 +13,7 @@ import ForgotPassword from './pages/auth/ForgotPassword.js';
 // Barangay
 import BarangayDashboard from './pages/barangay/Dashboard.js';
 import CreateBlotter from './pages/barangay/CreateBlotter.js';
+import EditBlotter from './pages/barangay/EditBlotter.js';
 import BarangayBlotterList from './pages/barangay/BlotterList.js';
 import BarangayBlotterView from './pages/barangay/BlotterView.js';
 
@@ -42,8 +46,8 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          {/* Root redirect */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          {/* Landing page */}
+          <Route path="/" element={<Landing />} />
 
           {/* Public auth routes */}
           <Route path="/login" element={<Login />} />
@@ -61,6 +65,9 @@ export default function App() {
           } />
           <Route path="/barangay/blotters/:id" element={
             <ProtectedRoute role="barangay"><BarangayBlotterView /></ProtectedRoute>
+          } />
+          <Route path="/barangay/blotters/:id/edit" element={
+            <ProtectedRoute role="barangay"><EditBlotter /></ProtectedRoute>
           } />
 
           {/* Municipal routes */}

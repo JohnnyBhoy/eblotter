@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import PageLayout from '../../components/layout/PageLayout.js';
 import BlotterDetail from '../../components/blotter/BlotterDetail.js';
 import ExportBar from '../../components/reports/ExportBar.js';
@@ -58,6 +58,12 @@ export default function BlotterView() {
               {STATUSES.map(s => <option key={s} value={s}>{formatStatus(s)}</option>)}
             </select>
           </div>
+          <Link
+              to={`/barangay/blotters/${id}/edit`}
+              className="text-xs px-3 py-1.5 bg-yellow-50 text-yellow-700 border border-yellow-200 rounded-lg hover:bg-yellow-100 transition"
+            >
+              ✏️ Edit
+            </Link>
           <ExportBar blotterId={id} />
         </div>
       </div>
