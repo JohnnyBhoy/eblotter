@@ -1,0 +1,12 @@
+import type { Request, Response, NextFunction } from 'express';
+import type { FilterQuery } from 'mongoose';
+import type { IUserDocument } from '../models/User.js';
+import type { IBlotterDocument } from '../models/Blotter.js';
+export declare const scopeFilter: (user: IUserDocument) => Promise<FilterQuery<IBlotterDocument>>;
+export declare const createBlotter: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const getBlotters: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const getBlotter: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const updateBlotter: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const updateStatus: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const deleteBlotter: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const getDashboardStats: (req: Request, res: Response, next: NextFunction) => Promise<void>;

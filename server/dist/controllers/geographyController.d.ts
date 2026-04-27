@@ -1,0 +1,11 @@
+import type { Request, Response, NextFunction } from 'express';
+export declare const getRegions: (_req: Request, res: Response) => void;
+export declare const getProvinces: (req: Request, res: Response) => void;
+export declare const getMunicipalities: (req: Request, res: Response) => void;
+export declare const getBarangays: (req: Request, res: Response) => void;
+export declare const registerProvince: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const registerMunicipality: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const registerBarangay: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const getRegisteredProvinces: (_req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const getRegisteredMunicipalities: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const getRegisteredBarangays: (req: Request, res: Response, next: NextFunction) => Promise<void>;
