@@ -37,9 +37,9 @@ export default function ProvinceBlotterList() {
 
   return (
     <PageLayout>
-      <h1 className="text-2xl font-bold text-[#003366] mb-6">Provincial Blotters</h1>
+      <h1 className="text-xl font-bold text-white mb-6">Provincial Blotters</h1>
       {loading ? (
-        <div className="flex justify-center py-12"><div className="w-8 h-8 border-4 border-[#003366] border-t-transparent rounded-full animate-spin"></div></div>
+        <div className="flex justify-center py-12"><div className="w-8 h-8 rounded-full border-2 border-blue-500/30 border-t-blue-500 animate-spin"></div></div>
       ) : (
         <BlotterTable
           blotters={data.blotters}

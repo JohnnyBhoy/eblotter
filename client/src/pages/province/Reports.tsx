@@ -20,11 +20,11 @@ export default function ProvinceReports() {
   return (
     <PageLayout>
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-        <h1 className="text-2xl font-bold text-[#003366]">Provincial Reports</h1>
+        <h1 className="text-xl font-bold text-white">Provincial Reports</h1>
         <ExportBar summaryParams={{ dateFrom, dateTo }} />
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6 flex flex-wrap gap-4">
+      <div className="rounded-2xl style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }} p-4 mb-6 flex flex-wrap gap-4">
         <div>
           <label className="block text-xs font-medium text-gray-600 mb-1">Date From</label>
           <input type="date" className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm" value={dateFrom} onChange={e => setDateFrom(e.target.value)} />
@@ -36,7 +36,7 @@ export default function ProvinceReports() {
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-12"><div className="w-8 h-8 border-4 border-[#003366] border-t-transparent rounded-full animate-spin"></div></div>
+        <div className="flex justify-center py-12"><div className="w-8 h-8 rounded-full border-2 border-blue-500/30 border-t-blue-500 animate-spin"></div></div>
       ) : (
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -46,12 +46,12 @@ export default function ProvinceReports() {
             <StatsCard label="Referred to PNP" value={stats?.referred} icon="🚔" color="bg-orange-500" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl border border-gray-200 p-5">
-              <h2 className="text-base font-semibold text-gray-800 mb-3">By Incident Type</h2>
+            <div className="rounded-2xl style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }} p-5">
+              <h2 className="text-sm font-semibold text-white mb-3">By Incident Type</h2>
               <IncidentTypeChart data={stats?.typeBreakdown || []} />
             </div>
-            <div className="bg-white rounded-xl border border-gray-200 p-5">
-              <h2 className="text-base font-semibold text-gray-800 mb-3">Monthly Trend</h2>
+            <div className="rounded-2xl style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }} p-5">
+              <h2 className="text-sm font-semibold text-white mb-3">Monthly Trend</h2>
               <MonthlyTrendChart data={stats?.monthlyTrend || []} />
             </div>
           </div>

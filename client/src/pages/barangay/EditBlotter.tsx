@@ -148,8 +148,8 @@ export default function EditBlotter() {
   return (
     <PageLayout>
       <div className="flex items-center gap-3 mb-6">
-        <button onClick={() => navigate(-1)} className="text-[#003366] text-sm font-medium">← Back</button>
-        <h1 className="text-2xl font-bold text-[#003366]">Edit Blotter</h1>
+        <button onClick={() => navigate(-1)} className="text-xs font-semibold" style={{ color: "#60a5fa" }}>← Back</button>
+        <h1 className="text-xl font-bold text-white">Edit Blotter</h1>
       </div>
 
       <div className="max-w-3xl mx-auto">
@@ -157,10 +157,10 @@ export default function EditBlotter() {
         <div className="flex items-center mb-8">
           {STEPS.map((s, i) => (
             <React.Fragment key={s}>
-              <div className={`flex items-center gap-2 ${i <= step ? 'text-[#003366]' : 'text-gray-400'}`}>
+              <div className={`flex items-center gap-2 ${i <= step ? 'text-blue-400' : 'text-gray-400'}`}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 ${
                   i < step ? 'bg-[#003366] border-[#003366] text-white'
-                  : i === step ? 'border-[#003366] text-[#003366]'
+                  : i === step ? 'border-[#003366] text-blue-400'
                   : 'border-gray-300 text-gray-400'
                 }`}>{i + 1}</div>
                 <span className="text-sm font-medium hidden sm:block">{s}</span>
@@ -172,7 +172,7 @@ export default function EditBlotter() {
           ))}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}>
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">{error}</div>
           )}
@@ -226,7 +226,7 @@ export default function EditBlotter() {
               </button>
             ) : <div />}
             {step < STEPS.length - 1 ? (
-              <button type="button" onClick={next} className="px-5 py-2 bg-[#003366] text-white rounded-lg hover:bg-[#002147] transition text-sm">
+              <button type="button" onClick={next} className="px-5 py-2 rounded-xl text-sm font-semibold text-white rounded-lg text-sm">
                 Next →
               </button>
             ) : (
@@ -234,7 +234,7 @@ export default function EditBlotter() {
                 type="button"
                 onClick={submit}
                 disabled={submitting}
-                className="px-6 py-2 bg-[#003366] text-white rounded-lg hover:bg-[#002147] transition text-sm disabled:opacity-50"
+                className="px-6 py-2 rounded-xl text-sm font-semibold text-white rounded-lg text-sm disabled:opacity-50"
               >
                 {submitting ? 'Saving...' : 'Save Changes'}
               </button>

@@ -36,57 +36,79 @@ export default function ProvinceManagement() {
     }
   }
 
+  const inputStyle: React.CSSProperties = {
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: '10px',
+    color: '#cbd5e1',
+    fontSize: 13,
+    padding: '8px 12px',
+    outline: 'none',
+    flex: 1,
+  };
+
   return (
     <PageLayout>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-[#003366]">Province Management</h1>
-        <button onClick={() => setShowForm(f => !f)} className="bg-[#003366] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#002147] transition">
+        <div>
+          <h1 className="text-xl font-bold text-white">Province Management</h1>
+          <p className="text-xs mt-0.5" style={{ color: '#475569' }}>Registered provinces in the system</p>
+        </div>
+        <button
+          onClick={() => setShowForm(f => !f)}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white"
+          style={showForm
+            ? { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }
+            : { background: 'linear-gradient(135deg,#1d4ed8,#2563eb)', boxShadow: '0 4px 20px rgba(37,99,235,0.4)' }
+          }
+        >
           {showForm ? 'Cancel' : '+ Register Province'}
         </button>
       </div>
 
       {showForm && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
-          <h2 className="text-base font-semibold text-gray-800 mb-4">Register Province via PSGC</h2>
-          {error && <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">{error}</div>}
+        <div className="rounded-2xl p-6 mb-6" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}>
+          <h2 className="text-sm font-semibold text-white mb-4">Register Province via PSGC</h2>
+          {error && <div className="mb-3 p-3 rounded-xl text-sm" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5' }}>{error}</div>}
           <form onSubmit={handleSubmit} className="flex gap-3 items-end">
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-1">PSGC Code</label>
-              <input
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#003366]"
-                value={psgcCode}
-                onChange={e => setPsgcCode(e.target.value)}
-                placeholder="e.g. 064500000"
-                required
-              />
+            <div style={{ flex: 1 }}>
+              <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#475569' }}>PSGC Code</label>
+              <input style={inputStyle} value={psgcCode} onChange={e => setPsgcCode(e.target.value)} placeholder="e.g. 064500000" required />
             </div>
-            <button type="submit" disabled={submitting} className="bg-[#003366] text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-[#002147] transition disabled:opacity-50">
-              {submitting ? 'Registering...' : 'Register'}
+            <button type="submit" disabled={submitting} className="px-6 py-2.5 rounded-xl text-sm font-bold text-white disabled:opacity-50"
+              style={{ background: 'linear-gradient(135deg,#1d4ed8,#2563eb)', boxShadow: '0 4px 20px rgba(37,99,235,0.4)' }}>
+              {submitting ? 'Registering…' : 'Register'}
             </button>
           </form>
         </div>
       )}
 
       {loading ? (
-        <div className="flex justify-center py-12"><div className="w-8 h-8 border-4 border-[#003366] border-t-transparent rounded-full animate-spin"></div></div>
+        <div className="flex items-center justify-center py-16">
+          <div className="w-8 h-8 rounded-full border-2 border-blue-500/30 border-t-blue-500 animate-spin" />
+        </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-gray-200">
+        <div className="overflow-x-auto rounded-2xl" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
           <table className="w-full text-sm">
-            <thead className="bg-[#003366] text-white text-xs uppercase">
-              <tr>
-                <th className="px-4 py-3 text-left">Province Name</th>
-                <th className="px-4 py-3 text-left">PSGC Code</th>
-                <th className="px-4 py-3 text-left">Region</th>
+            <thead>
+              <tr style={{ background: 'rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+                {['Province Name', 'PSGC Code', 'Region'].map(h => (
+                  <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#475569' }}>{h}</th>
+                ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody>
               {provinces.length === 0 ? (
-                <tr><td colSpan={3} className="px-4 py-8 text-center text-gray-400">No provinces registered yet.</td></tr>
+                <tr><td colSpan={3} className="px-4 py-8 text-center text-sm" style={{ color: '#334155' }}>No provinces registered yet.</td></tr>
               ) : provinces.map((p, idx) => (
-                <tr key={p._id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                  <td className="px-4 py-3 font-medium text-[#003366]">{p.name}</td>
-                  <td className="px-4 py-3 text-gray-500">{p.psgcCode}</td>
-                  <td className="px-4 py-3">{p.regionName || '—'}</td>
+                <tr key={p._id}
+                  style={{ background: idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(59,130,246,0.05)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)'; }}
+                >
+                  <td className="px-4 py-3 font-semibold text-xs" style={{ color: '#60a5fa' }}>{p.name}</td>
+                  <td className="px-4 py-3 text-xs" style={{ color: '#64748b' }}>{p.psgcCode}</td>
+                  <td className="px-4 py-3 text-xs" style={{ color: '#94a3b8' }}>{p.regionName || '—'}</td>
                 </tr>
               ))}
             </tbody>

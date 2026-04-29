@@ -7,11 +7,11 @@ import api from '../../utils/api.js';
 import axios from 'axios';
 import type { User, UserRole } from '../../types/index.js';
 
-const ROLE_COLORS: Record<string, string> = {
-  barangay: 'bg-blue-100 text-blue-700',
-  municipal: 'bg-purple-100 text-purple-700',
-  provincial: 'bg-orange-100 text-orange-700',
-  super_admin: 'bg-red-100 text-red-700',
+const ROLE_STYLES: Record<string, React.CSSProperties> = {
+  barangay: { background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.25)', color: '#93c5fd' },
+  municipal: { background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.25)', color: '#c4b5fd' },
+  provincial: { background: 'rgba(249,115,22,0.12)', border: '1px solid rgba(249,115,22,0.25)', color: '#fdba74' },
+  super_admin: { background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5' },
 };
 
 interface UserListData {
@@ -32,6 +32,16 @@ interface ConfirmState {
   type: 'toggle' | 'delete';
   user: User;
 }
+
+const inputStyle: React.CSSProperties = {
+  background: 'rgba(255,255,255,0.04)',
+  border: '1px solid rgba(255,255,255,0.08)',
+  borderRadius: '10px',
+  color: '#cbd5e1',
+  fontSize: 13,
+  padding: '7px 12px',
+  outline: 'none',
+};
 
 export default function AccountManagement() {
   const [data, setData] = useState<UserListData>({ users: [], total: 0, totalPages: 1 });
@@ -78,87 +88,123 @@ export default function AccountManagement() {
     setConfirm(null);
   }
 
-  const selectClass = 'border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none';
-
   return (
     <PageLayout>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-[#003366]">Account Management</h1>
-        <Link to="/superadmin/accounts/add" className="bg-[#003366] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#002147] transition">
-          + Add Account
+        <div>
+          <h1 className="text-xl font-bold text-white">Account Management</h1>
+          <p className="text-xs mt-0.5" style={{ color: '#475569' }}>Manage all system user accounts</p>
+        </div>
+        <Link
+          to="/superadmin/accounts/add"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white"
+          style={{ background: 'linear-gradient(135deg,#1d4ed8,#2563eb)', boxShadow: '0 4px 20px rgba(37,99,235,0.4)' }}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-3.5 h-3.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Add Account
         </Link>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-4 mb-4 flex flex-wrap gap-3 items-end">
+      {/* Filters */}
+      <div className="rounded-2xl p-4 mb-4 flex flex-wrap gap-2 items-end" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}>
         <form onSubmit={handleSearch} className="flex gap-2 flex-1 min-w-48">
           <input
-            className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#003366]"
+            style={{ ...inputStyle, flex: 1 }}
             placeholder="Search name, username, email..."
             value={filters.search}
             onChange={e => setFilters(f => ({ ...f, search: e.target.value }))}
+            onFocus={e => { e.target.style.borderColor = 'rgba(59,130,246,0.5)'; }}
+            onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.08)'; }}
           />
-          <button type="submit" className="px-3 py-1.5 bg-[#003366] text-white rounded-lg text-sm hover:bg-[#002147]">Search</button>
+          <button
+            type="submit"
+            className="px-4 py-1.5 rounded-xl text-sm font-semibold text-white"
+            style={{ background: 'rgba(37,99,235,0.8)', border: '1px solid rgba(59,130,246,0.4)' }}
+          >
+            Search
+          </button>
         </form>
-        <select className={selectClass} value={filters.role} onChange={e => handleFilter('role', e.target.value)}>
-          <option value="">All Roles</option>
-          <option value="barangay">Barangay</option>
-          <option value="municipal">Municipal</option>
-          <option value="provincial">Provincial</option>
-          <option value="super_admin">Super Admin</option>
+        <select style={{ ...inputStyle, cursor: 'pointer' }} value={filters.role} onChange={e => handleFilter('role', e.target.value)}>
+          <option value="" style={{ background: '#0a1628' }}>All Roles</option>
+          <option value="barangay" style={{ background: '#0a1628' }}>Barangay</option>
+          <option value="municipal" style={{ background: '#0a1628' }}>Municipal</option>
+          <option value="provincial" style={{ background: '#0a1628' }}>Provincial</option>
+          <option value="super_admin" style={{ background: '#0a1628' }}>Super Admin</option>
         </select>
-        <select className={selectClass} value={filters.isActive} onChange={e => handleFilter('isActive', e.target.value)}>
-          <option value="">All Status</option>
-          <option value="true">Active</option>
-          <option value="false">Inactive</option>
+        <select style={{ ...inputStyle, cursor: 'pointer' }} value={filters.isActive} onChange={e => handleFilter('isActive', e.target.value)}>
+          <option value="" style={{ background: '#0a1628' }}>All Status</option>
+          <option value="true" style={{ background: '#0a1628' }}>Active</option>
+          <option value="false" style={{ background: '#0a1628' }}>Inactive</option>
         </select>
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-12"><div className="w-8 h-8 border-4 border-[#003366] border-t-transparent rounded-full animate-spin"></div></div>
+        <div className="flex items-center justify-center py-16">
+          <div className="w-8 h-8 rounded-full border-2 border-blue-500/30 border-t-blue-500 animate-spin" />
+        </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-gray-200">
+        <div className="overflow-x-auto rounded-2xl" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
           <table className="w-full text-sm">
-            <thead className="bg-[#003366] text-white text-xs uppercase">
-              <tr>
-                <th className="px-4 py-3 text-left">Full Name</th>
-                <th className="px-4 py-3 text-left">Username</th>
-                <th className="px-4 py-3 text-left">Role</th>
-                <th className="px-4 py-3 text-left">Scope</th>
-                <th className="px-4 py-3 text-left">Status</th>
-                <th className="px-4 py-3 text-left">Joined</th>
-                <th className="px-4 py-3 text-left">Actions</th>
+            <thead>
+              <tr style={{ background: 'rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+                {['Full Name', 'Username', 'Role', 'Scope', 'Status', 'Joined', 'Actions'].map(h => (
+                  <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#475569' }}>{h}</th>
+                ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody>
               {data.users.length === 0 ? (
-                <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">No accounts found.</td></tr>
+                <tr>
+                  <td colSpan={7} className="px-4 py-10 text-center text-sm" style={{ color: '#334155' }}>No accounts found.</td>
+                </tr>
               ) : data.users.map((u, idx) => (
-                <tr key={u.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                  <td className="px-4 py-3 font-medium">{u.fullName}</td>
-                  <td className="px-4 py-3 text-gray-500">@{u.username}</td>
+                <tr
+                  key={u.id}
+                  style={{
+                    background: idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)',
+                    borderBottom: '1px solid rgba(255,255,255,0.04)',
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(59,130,246,0.05)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)'; }}
+                >
+                  <td className="px-4 py-3 font-semibold text-white text-xs">{u.fullName}</td>
+                  <td className="px-4 py-3 text-xs" style={{ color: '#64748b' }}>@{u.username}</td>
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${ROLE_COLORS[u.role] || 'bg-gray-100 text-gray-700'}`}>
+                    <span className="px-2 py-0.5 rounded-full text-xs font-semibold" style={ROLE_STYLES[u.role] || { background: 'rgba(100,116,139,0.12)', color: '#94a3b8' }}>
                       {u.role}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-500 text-xs">{u.scopeLabel || '—'}</td>
+                  <td className="px-4 py-3 text-xs" style={{ color: '#475569' }}>{u.scopeLabel || '—'}</td>
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${u.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                    <span
+                      className="px-2 py-0.5 rounded-full text-xs font-semibold"
+                      style={u.isActive
+                        ? { background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.25)', color: '#6ee7b7' }
+                        : { background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5' }
+                      }
+                    >
                       {u.isActive ? 'Active' : 'Inactive'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-500 whitespace-nowrap">{formatDate(u.createdAt ?? null)}</td>
+                  <td className="px-4 py-3 text-xs whitespace-nowrap" style={{ color: '#64748b' }}>{formatDate(u.createdAt ?? null)}</td>
                   <td className="px-4 py-3">
-                    <div className="flex gap-2">
+                    <div className="flex gap-1.5">
                       <button
                         onClick={() => setConfirm({ type: 'toggle', user: u })}
-                        className={`text-xs px-2 py-1 rounded ${u.isActive ? 'bg-red-50 text-red-600 hover:bg-red-100' : 'bg-green-50 text-green-600 hover:bg-green-100'}`}
+                        className="text-xs px-2.5 py-1 rounded-lg font-semibold transition-all"
+                        style={u.isActive
+                          ? { background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#f87171' }
+                          : { background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.2)', color: '#6ee7b7' }
+                        }
                       >
                         {u.isActive ? 'Deactivate' : 'Activate'}
                       </button>
                       <button
                         onClick={() => setConfirm({ type: 'delete', user: u })}
-                        className="text-xs px-2 py-1 rounded bg-gray-50 text-red-600 hover:bg-red-50"
+                        className="text-xs px-2.5 py-1 rounded-lg font-semibold transition-all"
+                        style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)', color: '#f87171' }}
                       >
                         Delete
                       </button>
@@ -173,10 +219,24 @@ export default function AccountManagement() {
 
       {data.totalPages > 1 && (
         <div className="flex items-center justify-between mt-4">
-          <span className="text-sm text-gray-500">Page {filters.page} of {data.totalPages} ({data.total} total)</span>
-          <div className="flex gap-1">
-            <button onClick={() => handleFilter('page', filters.page - 1)} disabled={filters.page <= 1} className="px-3 py-1.5 text-sm border rounded-lg disabled:opacity-40">‹ Prev</button>
-            <button onClick={() => handleFilter('page', filters.page + 1)} disabled={filters.page >= data.totalPages} className="px-3 py-1.5 text-sm border rounded-lg disabled:opacity-40">Next ›</button>
+          <span className="text-xs" style={{ color: '#475569' }}>Page {filters.page} of {data.totalPages} ({data.total} total)</span>
+          <div className="flex gap-1.5">
+            <button
+              onClick={() => handleFilter('page', filters.page - 1)}
+              disabled={filters.page <= 1}
+              className="px-3 py-1.5 text-xs rounded-lg disabled:opacity-30"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#94a3b8' }}
+            >
+              ‹ Prev
+            </button>
+            <button
+              onClick={() => handleFilter('page', filters.page + 1)}
+              disabled={filters.page >= data.totalPages}
+              className="px-3 py-1.5 text-xs rounded-lg disabled:opacity-30"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#94a3b8' }}
+            >
+              Next ›
+            </button>
           </div>
         </div>
       )}

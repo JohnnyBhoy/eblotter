@@ -20,12 +20,12 @@ export function formatStatus(status?: string | null): string {
 
 export function statusColor(status?: string | null): string {
   const map: Record<string, string> = {
-    draft: 'bg-gray-100 text-gray-700',
-    recorded: 'bg-blue-100 text-blue-700',
-    under_mediation: 'bg-yellow-100 text-yellow-700',
-    settled: 'bg-green-100 text-green-700',
-    referred_to_pnp: 'bg-orange-100 text-orange-700',
-    closed: 'bg-slate-100 text-slate-700',
+    draft: 'bg-slate-500/20 text-slate-300 border border-slate-500/30',
+    recorded: 'bg-blue-500/20 text-blue-300 border border-blue-500/30',
+    under_mediation: 'bg-amber-500/20 text-amber-300 border border-amber-500/30',
+    settled: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30',
+    referred_to_pnp: 'bg-orange-500/20 text-orange-300 border border-orange-500/30',
+    closed: 'bg-slate-600/30 text-slate-400 border border-slate-600/30',
   };
-  return (status && map[status]) || 'bg-gray-100 text-gray-700';
+  return (status && map[status]) || 'bg-slate-500/20 text-slate-300 border border-slate-500/30';
 }

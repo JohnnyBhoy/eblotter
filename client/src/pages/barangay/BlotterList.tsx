@@ -42,16 +42,16 @@ export default function BarangayBlotterList() {
   return (
     <PageLayout>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-[#003366]">My Blotters</h1>
+        <h1 className="text-xl font-bold text-white">My Blotters</h1>
         <div className="flex items-center gap-3">
           <ExportBar summaryParams={{}} />
-          <Link to="/barangay/blotters/create" className="bg-[#003366] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#002147] transition">
+          <Link to="/barangay/blotters/create" className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg,#1d4ed8,#2563eb)' }}>
             + Create New
           </Link>
         </div>
       </div>
       {loading ? (
-        <div className="flex justify-center py-12"><div className="w-8 h-8 border-4 border-[#003366] border-t-transparent rounded-full animate-spin"></div></div>
+        <div className="flex justify-center py-12"><div className="w-8 h-8 rounded-full border-2 border-blue-500/30 border-t-blue-500 animate-spin"></div></div>
       ) : (
         <BlotterTable
           blotters={data.blotters}

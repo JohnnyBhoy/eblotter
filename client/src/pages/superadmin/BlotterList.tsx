@@ -39,11 +39,16 @@ export default function SuperAdminBlotterList() {
   return (
     <PageLayout>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-[#003366]">All Blotters (System-Wide)</h1>
+        <div>
+          <h1 className="text-xl font-bold text-white">All Blotters (System-Wide)</h1>
+          <p className="text-xs mt-0.5" style={{ color: '#475569' }}>Complete blotter records across all jurisdictions</p>
+        </div>
         <ExportBar summaryParams={{}} />
       </div>
       {loading ? (
-        <div className="flex justify-center py-12"><div className="w-8 h-8 border-4 border-[#003366] border-t-transparent rounded-full animate-spin"></div></div>
+        <div className="flex items-center justify-center py-16">
+          <div className="w-8 h-8 rounded-full border-2 border-blue-500/30 border-t-blue-500 animate-spin" />
+        </div>
       ) : (
         <BlotterTable
           blotters={data.blotters}

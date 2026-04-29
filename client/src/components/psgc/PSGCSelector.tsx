@@ -49,45 +49,63 @@ export default function PSGCSelector({
     setBarangay('');
   }
 
-  const selectClass = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#003366]';
+  const sStyle: React.CSSProperties = {
+    width: '100%',
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: '10px',
+    color: '#cbd5e1',
+    fontSize: 13,
+    padding: '8px 12px',
+    outline: 'none',
+    cursor: 'pointer',
+  };
+  const lStyle: React.CSSProperties = {
+    display: 'block', fontSize: 11, fontWeight: 600,
+    textTransform: 'uppercase', letterSpacing: '0.07em',
+    color: '#475569', marginBottom: 5,
+  };
+  const onFocus = (e: React.FocusEvent<HTMLSelectElement>) => { e.target.style.borderColor = 'rgba(59,130,246,0.5)'; };
+  const onBlur = (e: React.FocusEvent<HTMLSelectElement>) => { e.target.style.borderColor = 'rgba(255,255,255,0.08)'; };
+  const optStyle = { background: '#0a1628' };
 
   return (
     <div className="space-y-3">
       {levels.includes('region') && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Region</label>
-          <select className={selectClass} value={region} onChange={handleRegion}>
-            <option value="">Select Region</option>
-            {getRegions().map(r => <option key={r.code} value={r.code}>{r.name}</option>)}
+          <label style={lStyle}>Region</label>
+          <select style={sStyle} value={region} onChange={handleRegion} onFocus={onFocus} onBlur={onBlur}>
+            <option value="" style={optStyle}>Select Region</option>
+            {getRegions().map(r => <option key={r.code} value={r.code} style={optStyle}>{r.name}</option>)}
           </select>
         </div>
       )}
       {levels.includes('province') && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Province</label>
-          <select className={selectClass} value={province} onChange={handleProvince}
-            disabled={levels.includes('region') && !region}>
-            <option value="">Select Province</option>
-            {getProvinces(region).map(p => <option key={p.code} value={p.code}>{p.name}</option>)}
+          <label style={lStyle}>Province</label>
+          <select style={{ ...sStyle, opacity: levels.includes('region') && !region ? 0.5 : 1 }} value={province} onChange={handleProvince}
+            disabled={levels.includes('region') && !region} onFocus={onFocus} onBlur={onBlur}>
+            <option value="" style={optStyle}>Select Province</option>
+            {getProvinces(region).map(p => <option key={p.code} value={p.code} style={optStyle}>{p.name}</option>)}
           </select>
         </div>
       )}
       {levels.includes('municipality') && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Municipality</label>
-          <select className={selectClass} value={municipality} onChange={handleMunicipality} disabled={!province}>
-            <option value="">Select Municipality</option>
-            {getMunicipalities(province).map(m => <option key={m.code} value={m.code}>{m.name}</option>)}
+          <label style={lStyle}>Municipality</label>
+          <select style={{ ...sStyle, opacity: !province ? 0.5 : 1 }} value={municipality} onChange={handleMunicipality} disabled={!province} onFocus={onFocus} onBlur={onBlur}>
+            <option value="" style={optStyle}>Select Municipality</option>
+            {getMunicipalities(province).map(m => <option key={m.code} value={m.code} style={optStyle}>{m.name}</option>)}
           </select>
         </div>
       )}
       {levels.includes('barangay') && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Barangay</label>
-          <select className={selectClass} value={barangay}
-            onChange={e => setBarangay(e.target.value)} disabled={!municipality}>
-            <option value="">Select Barangay</option>
-            {getBarangays(municipality).map(b => <option key={b.code} value={b.code}>{b.name}</option>)}
+          <label style={lStyle}>Barangay</label>
+          <select style={{ ...sStyle, opacity: !municipality ? 0.5 : 1 }} value={barangay}
+            onChange={e => setBarangay(e.target.value)} disabled={!municipality} onFocus={onFocus} onBlur={onBlur}>
+            <option value="" style={optStyle}>Select Barangay</option>
+            {getBarangays(municipality).map(b => <option key={b.code} value={b.code} style={optStyle}>{b.name}</option>)}
           </select>
         </div>
       )}

@@ -4,16 +4,16 @@ import { formatDateTime } from '../../utils/formatters.js';
 import api from '../../utils/api.js';
 import type { AuditLog as AuditLogEntry } from '../../types/index.js';
 
-const ACTION_COLORS: Record<string, string> = {
-  CREATE_BLOTTER: 'bg-blue-100 text-blue-700',
-  UPDATE_BLOTTER: 'bg-yellow-100 text-yellow-700',
-  DELETE_BLOTTER: 'bg-red-100 text-red-700',
-  UPDATE_STATUS: 'bg-purple-100 text-purple-700',
-  CREATE_ACCOUNT: 'bg-green-100 text-green-700',
-  UPDATE_ACCOUNT: 'bg-orange-100 text-orange-700',
-  ACTIVATE_ACCOUNT: 'bg-green-100 text-green-700',
-  DEACTIVATE_ACCOUNT: 'bg-red-100 text-red-700',
-  DELETE_ACCOUNT: 'bg-red-100 text-red-700',
+const ACTION_STYLES: Record<string, React.CSSProperties> = {
+  CREATE_BLOTTER: { background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.25)', color: '#93c5fd' },
+  UPDATE_BLOTTER: { background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.25)', color: '#fcd34d' },
+  DELETE_BLOTTER: { background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5' },
+  UPDATE_STATUS: { background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.25)', color: '#c4b5fd' },
+  CREATE_ACCOUNT: { background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.25)', color: '#6ee7b7' },
+  UPDATE_ACCOUNT: { background: 'rgba(249,115,22,0.12)', border: '1px solid rgba(249,115,22,0.25)', color: '#fdba74' },
+  ACTIVATE_ACCOUNT: { background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.25)', color: '#6ee7b7' },
+  DEACTIVATE_ACCOUNT: { background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5' },
+  DELETE_ACCOUNT: { background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5' },
 };
 
 interface AuditLogResponse {
@@ -46,59 +46,88 @@ export default function AuditLog() {
 
   useEffect(() => { load(1); }, []);
 
+  const inputStyle: React.CSSProperties = {
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: '10px',
+    color: '#cbd5e1',
+    fontSize: 13,
+    padding: '7px 12px',
+    outline: 'none',
+    flex: 1,
+  };
+
   return (
     <PageLayout>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-[#003366]">Audit Log</h1>
-        <span className="text-sm text-gray-500">{total} total entries</span>
+        <div>
+          <h1 className="text-xl font-bold text-white">Audit Log</h1>
+          <p className="text-xs mt-0.5" style={{ color: '#475569' }}>{total} total entries</p>
+        </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="p-4 border-b border-gray-200">
+      <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}>
+        <div className="p-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
           <form onSubmit={e => { e.preventDefault(); load(1); }} className="flex gap-2">
             <input
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#003366]"
+              style={inputStyle}
               placeholder="Search actions..."
               value={search}
               onChange={e => setSearch(e.target.value)}
+              onFocus={e => { e.target.style.borderColor = 'rgba(59,130,246,0.5)'; }}
+              onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.08)'; }}
             />
-            <button type="submit" className="px-4 py-1.5 bg-[#003366] text-white rounded-lg text-sm">Search</button>
+            <button
+              type="submit"
+              className="px-4 py-1.5 rounded-xl text-sm font-semibold text-white"
+              style={{ background: 'rgba(37,99,235,0.8)', border: '1px solid rgba(59,130,246,0.4)' }}
+            >
+              Search
+            </button>
           </form>
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-12"><div className="w-8 h-8 border-4 border-[#003366] border-t-transparent rounded-full animate-spin"></div></div>
+          <div className="flex items-center justify-center py-16">
+            <div className="w-8 h-8 rounded-full border-2 border-blue-500/30 border-t-blue-500 animate-spin" />
+          </div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Performed By</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Details</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">IP Address</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date/Time</th>
+            <thead>
+              <tr style={{ background: 'rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+                {['Action', 'Performed By', 'Details', 'IP Address', 'Date/Time'].map(h => (
+                  <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#475569' }}>{h}</th>
+                ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody>
               {logs.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-gray-400">
+                  <td colSpan={5} className="px-4 py-10 text-center text-sm" style={{ color: '#334155' }}>
                     {total === 0 ? 'No audit log entries yet.' : 'No results for this search.'}
                   </td>
                 </tr>
               ) : logs.map((log, idx) => (
-                <tr key={log._id || idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                <tr
+                  key={log._id || idx}
+                  style={{
+                    background: idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)',
+                    borderBottom: '1px solid rgba(255,255,255,0.04)',
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(59,130,246,0.04)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)'; }}
+                >
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-0.5 rounded text-xs font-medium ${ACTION_COLORS[log.action ?? ''] || 'bg-gray-100 text-gray-700'}`}>
+                    <span className="px-2 py-0.5 rounded-lg text-xs font-semibold" style={ACTION_STYLES[log.action ?? ''] || { background: 'rgba(100,116,139,0.12)', color: '#94a3b8' }}>
                       {log.action}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-700">
+                  <td className="px-4 py-3 text-xs font-medium text-white">
                     {log.performedBy?.fullName || log.performedBy?.username || '—'}
                   </td>
-                  <td className="px-4 py-3 text-gray-600 max-w-xs truncate">{log.details || '—'}</td>
-                  <td className="px-4 py-3 text-gray-400 text-xs">{log.ipAddress || '—'}</td>
-                  <td className="px-4 py-3 text-gray-500 whitespace-nowrap text-xs">{formatDateTime(log.timestamp)}</td>
+                  <td className="px-4 py-3 text-xs max-w-xs truncate" style={{ color: '#94a3b8' }}>{log.details || '—'}</td>
+                  <td className="px-4 py-3 text-xs" style={{ color: '#475569' }}>{log.ipAddress || '—'}</td>
+                  <td className="px-4 py-3 text-xs whitespace-nowrap" style={{ color: '#64748b' }}>{formatDateTime(log.timestamp)}</td>
                 </tr>
               ))}
             </tbody>
@@ -106,11 +135,25 @@ export default function AuditLog() {
         )}
 
         {totalPages > 1 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
-            <span className="text-sm text-gray-500">Page {page} of {totalPages}</span>
-            <div className="flex gap-1">
-              <button onClick={() => load(page - 1)} disabled={page <= 1} className="px-3 py-1.5 text-sm border rounded-lg disabled:opacity-40">‹ Prev</button>
-              <button onClick={() => load(page + 1)} disabled={page >= totalPages} className="px-3 py-1.5 text-sm border rounded-lg disabled:opacity-40">Next ›</button>
+          <div className="flex items-center justify-between px-4 py-3" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+            <span className="text-xs" style={{ color: '#475569' }}>Page {page} of {totalPages}</span>
+            <div className="flex gap-1.5">
+              <button
+                onClick={() => load(page - 1)}
+                disabled={page <= 1}
+                className="px-3 py-1.5 text-xs rounded-lg disabled:opacity-30"
+                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#94a3b8' }}
+              >
+                ‹ Prev
+              </button>
+              <button
+                onClick={() => load(page + 1)}
+                disabled={page >= totalPages}
+                className="px-3 py-1.5 text-xs rounded-lg disabled:opacity-30"
+                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#94a3b8' }}
+              >
+                Next ›
+              </button>
             </div>
           </div>
         )}

@@ -5,12 +5,22 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import api from '../../utils/api.js';
 import type { Blotter } from '../../types/index.js';
 
-const COLORS = ['#003366', '#FFD700', '#e02020', '#16a34a', '#7c3aed'];
+const COLORS = ['#3b82f6', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444'];
 
 interface MunData {
   name: string;
   total: number;
   statuses: Record<string, number>;
+}
+
+function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: { value: number }[]; label?: string }) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div style={{ background: '#0a1628', border: '1px solid rgba(59,130,246,0.3)', borderRadius: 10, padding: '8px 14px' }}>
+      <div style={{ color: '#93c5fd', fontSize: 12, marginBottom: 2 }}>{label}</div>
+      <div style={{ color: '#fff', fontSize: 14, fontWeight: 700 }}>{payload[0].value} blotters</div>
+    </div>
+  );
 }
 
 export default function MunicipalBreakdown() {
@@ -34,68 +44,93 @@ export default function MunicipalBreakdown() {
   const tableData = Object.values(munDataMap).sort((a, b) => b.total - a.total);
   const chartData = tableData.map(m => ({ name: m.name, count: m.total }));
 
+  const thStyle: React.CSSProperties = { padding: '10px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: '#475569', whiteSpace: 'nowrap' };
+  const thCenter: React.CSSProperties = { ...thStyle, textAlign: 'center' };
+
   return (
     <PageLayout>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-[#003366]">Municipal Breakdown</h1>
+        <h1 className="text-xl font-bold text-white">Municipal Breakdown</h1>
         <ExportBar summaryParams={{}} />
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-12"><div className="w-8 h-8 border-4 border-[#003366] border-t-transparent rounded-full animate-spin"></div></div>
+        <div className="flex justify-center py-12"><div className="w-8 h-8 rounded-full border-2 border-blue-500/30 border-t-blue-500 animate-spin"></div></div>
       ) : (
         <>
-          <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6">
-            <h2 className="text-base font-semibold text-gray-800 mb-3">Blotters per Municipality</h2>
+          <div
+            className="rounded-2xl p-5 mb-6"
+            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}
+          >
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-1 h-4 rounded-full" style={{ background: 'linear-gradient(to bottom,#3b82f6,#8b5cf6)' }} />
+              <h2 className="text-sm font-semibold text-white">Blotters per Municipality</h2>
+            </div>
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                <Bar dataKey="count" name="Blotters">
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                <XAxis dataKey="name" tick={{ fill: '#475569', fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis allowDecimals={false} tick={{ fill: '#475569', fontSize: 11 }} axisLine={false} tickLine={false} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
+                <Bar dataKey="count" name="Blotters" radius={[4, 4, 0, 0]}>
                   {chartData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-[#003366] text-white">
-                <tr>
-                  <th className="px-4 py-3 text-left">Municipality</th>
-                  <th className="px-4 py-3 text-center">Total</th>
-                  <th className="px-4 py-3 text-center">Draft</th>
-                  <th className="px-4 py-3 text-center">Recorded</th>
-                  <th className="px-4 py-3 text-center">Under Mediation</th>
-                  <th className="px-4 py-3 text-center">Settled</th>
-                  <th className="px-4 py-3 text-center">Referred PNP</th>
-                  <th className="px-4 py-3 text-center">Closed</th>
-                  <th className="px-4 py-3 text-center">% of Total</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {tableData.map((m, idx) => (
-                  <tr key={m.name} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                    <td className="px-4 py-3 font-medium text-[#003366]">{m.name}</td>
-                    <td className="px-4 py-3 text-center font-bold">{m.total}</td>
-                    <td className="px-4 py-3 text-center text-gray-500">{m.statuses['draft'] || 0}</td>
-                    <td className="px-4 py-3 text-center text-blue-600">{m.statuses['recorded'] || 0}</td>
-                    <td className="px-4 py-3 text-center text-yellow-600">{m.statuses['under_mediation'] || 0}</td>
-                    <td className="px-4 py-3 text-center text-green-600">{m.statuses['settled'] || 0}</td>
-                    <td className="px-4 py-3 text-center text-orange-600">{m.statuses['referred_to_pnp'] || 0}</td>
-                    <td className="px-4 py-3 text-center text-slate-500">{m.statuses['closed'] || 0}</td>
-                    <td className="px-4 py-3 text-center">{blotters.length > 0 ? `${((m.total / blotters.length) * 100).toFixed(1)}%` : '0%'}</td>
+          <div
+            className="rounded-2xl overflow-hidden"
+            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}
+          >
+            <div style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '12px 16px' }}>
+              <div className="flex items-center gap-2">
+                <div className="w-1 h-4 rounded-full" style={{ background: 'linear-gradient(to bottom,#3b82f6,#06b6d4)' }} />
+                <span className="text-sm font-semibold text-white">Breakdown Table</span>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead style={{ background: 'rgba(255,255,255,0.03)' }}>
+                  <tr>
+                    <th style={thStyle}>Municipality</th>
+                    <th style={thCenter}>Total</th>
+                    <th style={thCenter}>Draft</th>
+                    <th style={thCenter}>Recorded</th>
+                    <th style={thCenter}>Under Mediation</th>
+                    <th style={thCenter}>Settled</th>
+                    <th style={thCenter}>Referred PNP</th>
+                    <th style={thCenter}>Closed</th>
+                    <th style={thCenter}>% of Total</th>
                   </tr>
-                ))}
-                <tr className="bg-blue-50 font-bold">
-                  <td className="px-4 py-3 text-[#003366]">TOTAL</td>
-                  <td className="px-4 py-3 text-center">{blotters.length}</td>
-                  <td colSpan={7}></td>
-                </tr>
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {tableData.map((m, idx) => (
+                    <tr
+                      key={m.name}
+                      style={{ borderTop: '1px solid rgba(255,255,255,0.04)', background: idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)' }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(59,130,246,0.06)'; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)'; }}
+                    >
+                      <td className="px-4 py-3 font-medium" style={{ color: '#60a5fa' }}>{m.name}</td>
+                      <td className="px-4 py-3 text-center font-bold text-white">{m.total}</td>
+                      <td className="px-4 py-3 text-center" style={{ color: '#94a3b8' }}>{m.statuses['draft'] || 0}</td>
+                      <td className="px-4 py-3 text-center" style={{ color: '#93c5fd' }}>{m.statuses['recorded'] || 0}</td>
+                      <td className="px-4 py-3 text-center" style={{ color: '#fcd34d' }}>{m.statuses['under_mediation'] || 0}</td>
+                      <td className="px-4 py-3 text-center" style={{ color: '#6ee7b7' }}>{m.statuses['settled'] || 0}</td>
+                      <td className="px-4 py-3 text-center" style={{ color: '#fdba74' }}>{m.statuses['referred_to_pnp'] || 0}</td>
+                      <td className="px-4 py-3 text-center" style={{ color: '#94a3b8' }}>{m.statuses['closed'] || 0}</td>
+                      <td className="px-4 py-3 text-center" style={{ color: '#475569' }}>{blotters.length > 0 ? `${((m.total / blotters.length) * 100).toFixed(1)}%` : '0%'}</td>
+                    </tr>
+                  ))}
+                  <tr style={{ borderTop: '1px solid rgba(59,130,246,0.2)', background: 'rgba(59,130,246,0.06)' }}>
+                    <td className="px-4 py-3 font-bold" style={{ color: '#60a5fa' }}>TOTAL</td>
+                    <td className="px-4 py-3 text-center font-bold text-white">{blotters.length}</td>
+                    <td colSpan={7}></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </>
       )}
