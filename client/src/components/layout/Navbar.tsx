@@ -74,7 +74,7 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-export default function Navbar() {
+export default function Navbar({ onMobileMenuToggle }: { onMobileMenuToggle?: () => void }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -98,8 +98,19 @@ export default function Navbar() {
       <header className="flex items-center justify-between px-6 h-16 shrink-0 relative z-20"
         style={{ background: 'rgba(4,9,26,0.8)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
 
-        {/* Breadcrumb placeholder */}
-        <div className="text-slate-600 text-xs font-medium tracking-wide uppercase hidden sm:block">
+        {/* Mobile hamburger */}
+        <button
+          onClick={onMobileMenuToggle}
+          className="md:hidden w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+          aria-label="Open menu"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+        </button>
+
+        {/* Desktop breadcrumb */}
+        <div className="text-slate-600 text-xs font-medium tracking-wide uppercase hidden md:block">
           Barangay e-Blotter System
         </div>
 
